@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 2019. Huawei Technologies Co.,Ltd.All rights reserved.
+ * 
+ * Description:  the common drv header define the unified interface for wd
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef __WD_ADAPTER_H__
+#define __WD_ADAPTER_H__
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/ioctl.h>
+#include <sys/mman.h>
+
+
+#include "wd.h"
+
+struct wd_drv_dio_if {
+	char *hw_type;
+	int (*open)(struct wd_queue *q);
+	void (*close)(struct wd_queue *q);
+	int (*send)(struct wd_queue *q, void *req);
+	int (*recv)(struct wd_queue *q, void **req);
+	void (*flush)(struct wd_queue *q);
+};
+
+extern int drv_open(struct wd_queue *q);
+extern void drv_close(struct wd_queue *q);
+extern int drv_send(struct wd_queue *q, void *req);
+extern int drv_recv(struct wd_queue *q, void **req);
+extern void drv_flush(struct wd_queue *q);
+extern void *drv_reserve_mem(struct wd_queue *q, size_t size);
+extern void drv_unmap_reserve_mem(struct wd_queue *q, void *addr, size_t size);
+
+#endif
